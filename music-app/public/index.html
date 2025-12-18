@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App - Login / Signup</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="music-bg">
+    <div class="container">
+        <div class="form-container" id="formContainer">
+            <div class="form-toggle">
+                <button id="loginToggle" class="active">Login</button>
+                <button id="signupToggle">Sign Up</button>
+            </div>
+            <form id="loginForm" class="form active">
+                
+                <div class="input-group">
+                    <input type="email" id="loginEmail" required>
+                    <label for="loginEmail">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" required>
+                    <label for="loginPassword">Password</label>
+                    <span class="toggle-password" data-target="loginPassword">👁️</span>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div class="form-message" id="loginMessage"></div>
+            </form>
+            <form id="signupForm" class="form">
+                
+                <div class="input-group">
+                    <input type="text" id="signupName" required>
+                    <label for="signupName">Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signupEmail" required>
+                    <label for="signupEmail">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signupPassword" required>
+                    <label for="signupPassword">Password</label>
+                    <span class="toggle-password" data-target="signupPassword">👁️</span>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+                <div class="form-message" id="signupMessage"></div>
+            </form>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

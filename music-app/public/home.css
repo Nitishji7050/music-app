@@ -1,0 +1,123 @@
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        @media (max-width: 640px) {
+            .sidebar {
+                width: 100vw !important;
+                max-width: 100vw;
+            }
+            .player {
+                padding: 0.5rem !important;
+            }
+            .container {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .song-card {
+                min-width: 140px;
+                max-width: 100vw;
+            }
+            .navbar-search {
+                max-width: 90vw !important;
+            }
+        }
+        
+        body {
+            background-color: #0f0e17;
+            color: #fffffe;
+        }
+        
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .player {
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .player.active {
+            transform: translateY(0);
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff8906;
+            cursor: pointer;
+        }
+        
+        .progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff8906;
+            cursor: pointer;
+        }
+        
+        .song-card:hover .play-btn {
+            opacity: 1;
+        }
+        
+        .rotate {
+            animation: rotation 8s infinite linear;
+        }
+        
+        @keyframes rotation {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(359deg);
+            }
+        }
+        
+        /* Dark mode styles */
+        body.dark {
+            background-color: #0a0a1d;
+            color: #e0e0e0;
+        }
+        
+        .sidebar.dark {
+            background-color: #1e1e3a;
+        }
+        
+        .player.dark {
+            background-color: #1e1e3a;
+        }
+        
+        .song-card.dark {
+            background-color: #1e1e3a;
+        }
+        
+        /* Transition for dark mode */
+        .transition-colors {
+            transition: background-color 0.3s, color 0.3s;
+        }

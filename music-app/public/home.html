@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmony Music App</title>
+    <!-- Razorpay Checkout.js -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!--import css Tailwind website -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../public/home.css">
+    
+</head>
+<body class="relative min-h-screen overflow-auto">
+    <!-- Overlay -->
+    <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-50" id="overlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar fixed top-0 left-0 w-80 h-full bg-[#12122b] overflow-y-auto" id="sidebar">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-2xl font-bold">Profile Settings</h2>
+                <button id="close-sidebar" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col items-center mb-8">
+                <div class="relative mb-4">
+                    <img id="profile-img" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7fc8d9e6-2bb3-43d1-b7e9-1d8d573d5f45.png" alt="User profile photo - default avatar image" class="w-32 h-32 rounded-full object-cover border-4 border-[#ff8906]">
+                    <input type="file" id="profile-file" accept="image/*" style="display:none;">
+                    <button type="button" id="profile-upload-btn" class="absolute bottom-0 right-0 bg-[#ff8906] text-white rounded-full p-2">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <!-- Hidden file input for profile photo upload -->
+                    <input type="file" id="profile-photo-input" accept="image/*" style="display:none;" />
+                </div>
+                <h3 class="text-xl font-semibold">Username</h3>
+                <p class="text-gray-400">Free Plan</p>
+            </div>
+            
+            <div class="mb-6">
+                <h4 class="text-lg font-medium mb-4">Account Settings</h4>
+                <div class="space-y-3">
+                    <button class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition">
+                        <span>Change Username</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+<!-- script  -->
+                    <script src="js/app.js"></script> 
+
+                    <button class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition">
+                        <span>Change Password</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <!-- <button class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition"> -->
+                        <button id="subscription-btn" class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition">
+                            <span id="subscription-status">Subscription</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-medium mb-4">App Settings</h4>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a]">
+                        <span>Dark Mode</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" value="" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff8906]"></div>
+                        </label>
+                    </div>
+                    <button class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition">
+                        <span>Language</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="w-full flex items-center justify-between p-3 rounded-lg bg-[#1e1e3a] hover:bg-[#2a2a4a] transition">
+                        <span>Audio Quality</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="w-full mt-10 py-3 rounded-lg bg-[#ff8906] hover:bg-opacity-90 font-medium transition">
+                Log Out
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="pb-32">
+        <!-- Navbar -->
+        <nav class="bg-[#12122b] py-4 px-6 flex items-center justify-between sticky top-0 z-40">
+            <div class="flex flex-row items-center w-full justify-between">
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button id="profile-btn" class="bg-[#ff8906] rounded-full p-2">
+                        <i class="fas fa-user text-white"></i>
+                    </button>
+                    <h1 class="text-lg sm:text-xl font-bold" id="navbar-username">Harmony</h1>
+                </div>
+                <!-- Music Search Bar -->
+                <div class="flex-1 flex justify-center navbar-search min-w-0 mr-2">
+                    <div class="w-full max-w-xs sm:max-w-md">
+                        <input id="music-search" type="text" placeholder="Search music..." class="w-full px-3 py-2 rounded-full bg-[#1e1e3a] text-white focus:outline-none focus:ring-2 focus:ring-[#ff8906] placeholder-gray-400" />
+                    </div>
+                </div>
+                <div class="relative group flex-shrink-0 w-32 sm:w-auto">
+                    <button class="flex items-center space-x-2 bg-[#1e1e3a] px-4 py-2 rounded-full w-full sm:w-auto justify-center">
+                        <i class="fas fa-globe"></i>
+                        <span>English</span>
+                        <span class="bg-[#ff8906] text-xs px-2 py-1 rounded-full"> songs</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-[#1e1e3a] rounded-lg shadow-lg py-1 z-50 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 hover:bg-[#2a2a4a]">English</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-[#2a2a4a]">Hindi</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <div class="container mx-auto px-6 py-8">
+            <h2 class="text-2xl font-bold mb-6">SONGS</h2>
+            <!-- Responsive grid: 2 cols on mobile, 3 on small, 4 on md, 5 on lg, 6 on xl -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+                
+                <!-- Songs Cards -->
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="1">
+                    <div class="relative">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/ed/Love_the_Way_You_Lie_cover.png/250px-Love_the_Way_You_Lie_cover.png" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Love the way you lie</h3>
+                        <p class="text-gray-400 text-sm truncate">Eminem & Rihana</p>
+                    </div>
+                </div>
+                
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="2">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/65028581-c05c-48f4-a4c0-a1047e62bb5a.png" alt="Album cover for chill vibes song 'Blinding Lights'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Blinding Lights</h3>
+                        <p class="text-gray-400 text-sm truncate">The Weeknd</p>
+                    </div>
+                </div>
+                
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="3">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a8cb1fe8-ab00-48fb-ada4-59d426d3b0ce.png" alt="Album cover for energetic song 'Levitating'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Levitating</h3>
+                        <p class="text-gray-400 text-sm truncate">Dua Lipa</p>
+                    </div>
+                </div>
+                
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="4">
+                    <div class="relative">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/1/12/Lady_Gaga_and_Bruno_Mars_-_Die_with_a_Smile.png" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Die With a Smile</h3>
+                        <p class="text-gray-400 text-sm truncate">Bruno & Lady Gaga</p>
+                    </div>
+                </div>
+                
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="5">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5f85fbee-c855-4a66-a8c7-45f27d985458.png" alt="Album cover for relaxing song 'Someone You Loved'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Someone You Loved</h3>
+                        <p class="text-gray-400 text-sm truncate">Lewis Capaldi</p>
+                    </div>
+                </div>
+                
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="6">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5bf00a0b-b3a9-46b2-83d4-572c70ce46d8.png" alt="Album cover for dance hit 'Don't Start Now'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Don't Start Now</h3>
+                        <p class="text-gray-400 text-sm truncate">Dua Lipa</p>
+                    </div>
+                </div>
+                <!-- Hindi Song Card -->
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="7">
+                    <div class="relative">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.XHFDGX_2pZRkWY1oWFETvQHaHa?pid=ImgDet&w=184&h=184&c=7&dpr=1.3&o=7&rm=3" alt="Album cover for Hindi song 'Aitbar Nahi Karna'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                        <button class="download-btn absolute bottom-2 right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg" style="display:none;" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">Aitbar Nahi Karna</h3>
+                        <p class="text-gray-400 text-sm truncate">Hindi</p>
+                    </div>
+                </div>
+                    <!-- Popular Song Card -->
+                    <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="9">
+                        <div class="relative">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3tjXVej2E3MmI7Y6N75SI3N1ew6MnccAcuQ&s" alt="Album cover for 'Popular'" class="w-full aspect-square object-cover">
+                            <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                                <i class="fas fa-play text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium truncate">Popular</h3>
+                            <p class="text-gray-400 text-sm truncate">The Weeknd</p>
+                        </div>
+                    </div>
+                    <!-- Starboy Song Card -->
+                    <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="10">
+                        <div class="relative">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/3/39/The_Weeknd_-_Starboy.png" alt="Album cover for 'Starboy'" class="w-full aspect-square object-cover">
+                            <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                                <i class="fas fa-play text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium truncate">Starboy</h3>
+                            <p class="text-gray-400 text-sm truncate">The Weeknd</p>
+                        </div>
+                    </div>
+                    <!-- One Of The Girls Song Card -->
+                    <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="11">
+                        <div class="relative">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiMVIkXTOxg9m5BLNyjuUdxybLLeHuZ8DOOw&s" alt="Album cover for 'One Of The Girls'" class="w-full aspect-square object-cover">
+                            <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                                <i class="fas fa-play text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium truncate">One Of The Girls</h3>
+                            <p class="text-gray-400 text-sm truncate">The Weeknd</p>
+                        </div>
+                    </div>
+                    <!-- Perfect Song Card -->
+                    <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="12">
+                        <div class="relative">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFe58FLJS9mowUIkqO8_KqrLvSl38_H8uPWQ&s" alt="Album cover for 'Die with a smile'" class="w-full aspect-square object-cover">
+                            <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                                <i class="fas fa-play text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium truncate">Perfect</h3>
+                            <p class="text-gray-400 text-sm truncate">Ed Sheeran</p>
+                        </div>
+                    </div>
+                <!-- New Song Card -->
+                <div class="song-card bg-[#1e1e3a] rounded-lg overflow-hidden transition transform hover:scale-105 hover:shadow-lg" data-song-id="8">
+                    <div class="relative">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1wZMmTxWALKJkc4Hbh-b8boKVWoeBBwTYZw&s" alt="Album cover for 'I think they call this love'" class="w-full aspect-square object-cover">
+                        <button class="play-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ff8906] text-white rounded-full w-12 h-12 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                            <i class="fas fa-play text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium truncate">I think they call this love</h3>
+                        <p class="text-gray-400 text-sm truncate">Matthew Ifield</p>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player -->
+    <div class="player fixed bottom-0 left-0 right-0 bg-[#12122b] p-4 border-t border-gray-800 transform transition-transform duration-300" id="player">
+        <div class="container mx-auto">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+                <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-1/4 mb-2 sm:mb-0">
+                    <img id="current-song-img" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/672f06ec-b114-4dc9-b168-76521c54d2d0.png" alt="Currently playing song album cover" class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg rotate">
+                    <div>
+                        <h4 id="current-song-title" class="font-medium text-sm sm:text-base">Song Title</h4>
+                        <p id="current-song-artist" class="text-gray-400 text-xs sm:text-sm">Artist Name</p>
+                    </div>
+                </div>
+                <div class="w-full sm:w-2/4">
+                    <div class="flex items-center justify-center space-x-3 sm:space-x-6">
+                        <button id="shuffle-btn" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button id="prev-btn" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button id="play-btn" class="bg-[#ff8906] text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-opacity-90">
+                            <i class="fas fa-play" id="play-icon"></i>
+                        </button>
+                        <button id="next-btn" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button id="repeat-btn" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="mt-2 flex items-center space-x-2 sm:space-x-3">
+                        <span id="current-time" class="text-xs text-gray-400">0:00</span>
+                        <input type="range" min="0" max="100" value="0" class="progress-slider w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer" id="progress-slider">
+                        <span id="duration" class="text-xs text-gray-400">3:45</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-end space-x-2 sm:space-x-4 w-full sm:w-1/4">
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <i class="fas fa-volume-up text-gray-400"></i>
+                        <input type="range" min="0" max="100" value="70" class="volume-slider w-16 sm:w-24 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer" id="volume-slider">
+                    </div>
+                    <button id="queue-btn" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Use hidden audio element for JS control only -->
+    <audio id="blinding-light-audio" src="http://127.0.0.1:8000/music/The_Weeknd_-_Blinding_Lights_Offblogmedia.com.mp3" style="display:none;"></audio>
+
+    <script src="../public/home.js"></script>
+    <script src="js/app.js"></script> 
+</body>
+</html>
+
